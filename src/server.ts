@@ -1,7 +1,7 @@
 import fastify, {FastifyInstance, FastifyListenOptions} from "fastify";
 import {establishConnection} from "./plugins/mongoose";
 
-const server : FastifyInstance = fastify({
+const app : FastifyInstance = fastify({
     logger: {
         transport: {
             target: 'pino-pretty'
@@ -16,18 +16,19 @@ export default function startFastify(config: AppConfig): FastifyInstance {
         host: config.host
     }
 
-    server.get('/hc', async (request, reply) =>
+    app.get('/hc', async (request, reply) =>
         reply.status(200).send({msg: 'healthy'}))
 
-    server.listen(fastifyConfig, (err, _) => {
+    app.listen(fastifyConfig, (err, _) => {
         if (err) {
             console.error(err)
         }
+
         establishConnection(config.mongoConnectionString)
             .then(r => {
                 console.log('Connect mongoDB successfully')
             })
     })
 
-    return server
+    return app
 }
