@@ -1,0 +1,25 @@
+{
+  "name": "little-materials",
+  "version": "1.0.0",
+  "description": "Mongo, Fastify, React, Node stack with vitest",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "concurrently \"tsc -w \" \"nodemon dist/index.js\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "YHH",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "fastify": "^4.17.0",
+    "mongoose": "^7.2.1",
+    "pino-pretty": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.2.5",
+    "concurrently": "^8.0.1",
+    "nodemon": "^2.0.22",
+    "typescript": "^5.0.4"
+  }
+}
