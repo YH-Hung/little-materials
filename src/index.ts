@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv'
-import startFastify from "./server";
+import startFastify from './server'
 
 dotenv.config()
 const port = parseInt(process.env.FASTIFY_PORT || '8888')

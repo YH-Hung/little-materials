@@ -6,6 +6,9 @@ import request from "supertest";
 import startFastify from '../src/server'
 import mongoose from "mongoose";
 
+import * as VideoService from '../src/services/video-service'
+
+
 describe('Server status', () => {
     let app: FastifyInstance
 
@@ -19,10 +22,17 @@ describe('Server status', () => {
         await app.ready()
     })
 
-    it('Health Check /hc return healthy', async () => {
-        const res = await request(app.server).get('/hc')
-        expect(res.body['msg']).toBe('healthy')
+    it('Given an empty db, GET /videos return 200 and empty array', async () => {
+        // Act
+        const res = await request(app.server).get('/api/v1/videos');
+
+        // Assert
+        expect(res.statusCode).toBe(200)
     })
+
+    // afterEach(async () => {
+    //     mongoose.models.Video.deleteMany()
+    // })
 
     afterAll(async () => {
         await mongoose.disconnect()

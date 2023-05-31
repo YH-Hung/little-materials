@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "concurrently \"tsc -w \" \"nodemon dist/index.js\"",
-    "test": "vitest run --coverage"
+    "test": "vitest run --coverage",
+    "fix-prettier": "prettier --write \"./src/**/*.ts\""
   },
   "author": "YHH",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "@vitest/coverage-c8": "^0.31.2",
     "concurrently": "^8.0.1",
     "nodemon": "^2.0.22",
+    "prettier": "^2.8.8",
     "supertest": "^6.3.3",
     "typescript": "^5.0.4",
     "vitest": "^0.31.1"
