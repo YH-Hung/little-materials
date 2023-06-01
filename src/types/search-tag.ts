@@ -3,5 +3,6 @@ export enum SearchTag {
   DomainModeling = 'ddd',
   Testing = 'test',
   Kotlin = 'kt',
-  FSharp = 'fs'
+  FSharp = 'fs',
+  Typescript = 'ts'
 }

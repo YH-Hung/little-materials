@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "concurrently \"tsc -w \" \"nodemon dist/index.js\"",
-    "test": "vitest run --coverage",
+    "test": "vitest watch --coverage",
     "fix-prettier": "prettier --write \"./src/**/*.ts\""
   },
   "author": "YHH",

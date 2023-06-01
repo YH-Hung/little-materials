@@ -1,5 +1,6 @@
 import mongoose, { Schema, model } from 'mongoose'
 import { Video } from '../types/video'
+import { SearchTag } from '../types/search-tag'
 
 const videoSchema: Schema = new Schema(
   {
@@ -12,7 +13,8 @@ const videoSchema: Schema = new Schema(
       required: true
     },
     tags: {
-      type: [String]
+      type: [String],
+      enum: SearchTag // Mongoose will run Object.values() on the object to get the desired values.
     }
   },
   {
