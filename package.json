@@ -14,6 +14,8 @@
   "dependencies": {
     "dotenv": "^16.0.3",
     "fastify": "^4.17.0",
+    "fp-ts": "^2.16.0",
+    "io-ts": "^2.2.20",
     "mongoose": "^7.2.1",
     "pino-pretty": "^10.0.0"
   },
@@ -22,6 +24,7 @@
     "@types/supertest": "^2.0.12",
     "@vitest/coverage-c8": "^0.31.2",
     "concurrently": "^8.0.1",
+    "newtype-ts": "^0.3.5",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.8",
     "supertest": "^6.3.3",
