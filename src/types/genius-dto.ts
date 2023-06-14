@@ -14,10 +14,15 @@ const DateFromString = new t.Type<Date, string, unknown>(
 )
 
 const PostGeniusDtoCodec = t.type({
-    id: t.string,
     name: t.string,
     joinDate: DateFromString
 })
 
 export type PostGeniusDto = t.TypeOf<typeof PostGeniusDtoCodec>
 export const validatePostGeniusDto = PostGeniusDtoCodec.decode
+
+export type CreatedGeniusDto = {
+    geniusId: string,
+    geniusName: string,
+    geniusJoinDate: Date
+}
