@@ -1,10 +1,10 @@
-import {afterAll, afterEach, beforeAll, describe, expect, it} from 'vitest'
+import * as dbHandler from 'testcontainers-mongoose'
+import {afterAll, afterEach, beforeAll, describe, expect, it} from 'vitest';
 import {FastifyInstance} from "fastify";
 // @ts-ignore
 import request from "supertest";
 
 import startFastify from '../src/server'
-import mongoose from "mongoose";
 import GeniusModel from "../src/models/genius-model";
 import {PostGeniusDto} from "../src/types/genius-dto";
 
@@ -19,8 +19,8 @@ describe('Video API', () => {
             mongoConnectionString: 'mongodb://localhost:27017/mernBacked'
         })
 
+        await dbHandler.connect('mongo:6.0.6')
         await app.ready()
-        await GeniusModel.deleteMany()
     })
 
     const baseUrl = '/api/v1/genius';
@@ -69,12 +69,11 @@ describe('Video API', () => {
     })
 
     afterEach(async () => {
-        await GeniusModel.deleteMany()
+        await dbHandler.clearDatabase()
     })
 
     afterAll(async () => {
-        await GeniusModel.deleteMany()
-        await mongoose.disconnect()
+        await dbHandler.closeDatabase()
         await app.close()
     })
 })

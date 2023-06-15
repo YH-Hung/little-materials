@@ -4,7 +4,6 @@ import {FastifyInstance} from "fastify";
 import request from "supertest";
 
 import startFastify from '../src/server'
-import mongoose from "mongoose";
 import {SearchTag} from "../src/types/search-tag";
 
 describe('Server status', () => {
@@ -39,7 +38,6 @@ describe('Server status', () => {
     })
 
     afterAll(async () => {
-        await mongoose.disconnect()
         await app.close()
     })
 })

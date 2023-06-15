@@ -1,3 +1,4 @@
+import * as dbHandler from 'testcontainers-mongoose'
 import {afterAll, afterEach, beforeAll, describe, expect, it} from 'vitest'
 import {FastifyInstance} from "fastify";
 // @ts-ignore
@@ -6,7 +7,6 @@ import request from "supertest";
 import startFastify from '../src/server'
 import mongoose from "mongoose";
 import VideoModel from '../src/models/video-model'
-import * as VideoService from '../src/services/video-service'
 import {Video, VideoBody} from "../src/types/video";
 import {SearchTag} from "../src/types/search-tag";
 
@@ -29,8 +29,8 @@ describe('Video API', () => {
             mongoConnectionString: 'mongodb://localhost:27017/mernBacked'
         })
 
+        await dbHandler.connect('mongo:6.0.6')
         await app.ready()
-        await VideoModel.deleteMany()
     })
 
     const baseUrl = '/api/v1/videos';
@@ -83,11 +83,11 @@ describe('Video API', () => {
     })
 
     afterEach(async () => {
-        await VideoModel.deleteMany()
+        await dbHandler.clearDatabase()
     })
 
     afterAll(async () => {
-        await mongoose.disconnect()
+        await dbHandler.closeDatabase()
         await app.close()
     })
 })

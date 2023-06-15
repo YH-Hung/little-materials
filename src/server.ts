@@ -33,13 +33,15 @@ export default function startFastify(config: AppConfig): FastifyInstance {
       console.error(err)
     }
 
-    establishConnection(config.mongoConnectionString)
-      .then(() => {
-        console.log('Connect mongoDB successfully')
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    if (process.env.NODE_ENV !== 'test') {
+      establishConnection(config.mongoConnectionString)
+          .then(() => {
+            console.log('Connect mongoDB successfully')
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+    }
   })
 
   return app
