@@ -28,6 +28,7 @@
     "nodemon": "^2.0.22",
     "prettier": "^2.8.8",
     "supertest": "^6.3.3",
+    "testcontainers-mongoose": "^2.0.2",
     "typescript": "^5.0.4",
     "vitest": "^0.31.1"
   }

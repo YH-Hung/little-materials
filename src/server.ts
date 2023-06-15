@@ -2,6 +2,7 @@ import fastify, { FastifyInstance, FastifyListenOptions } from 'fastify'
 import { establishConnection } from './plugins/mongoose'
 import { SearchTag } from './types/search-tag'
 import { VideoRoute } from './routes/video-route'
+import {GeniusRoute} from "./routes/genius-route";
 
 const app: FastifyInstance = fastify({
   logger: {
@@ -25,6 +26,7 @@ export default function startFastify(config: AppConfig): FastifyInstance {
     rpl.status(200).send({ searchTags })
   })
   app.register(VideoRoute, { prefix: '/api/v1' })
+  app.register(GeniusRoute, { prefix: '/api/v1' })
 
   app.listen(fastifyConfig, (err, _) => {
     if (err) {

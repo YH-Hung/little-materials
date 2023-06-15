@@ -13,6 +13,9 @@ interface GeniusDoc {
     joinDate: Date
 }
 
+export const createGenius = (postDto: PostGeniusDto) => GeniusModel.create(postDto)
+export const getGeniuses = () => GeniusModel.find().exec()
+
 const safeCreateGenius: (gInfo: GeniusInfo) => TE.TaskEither<string, GeniusDoc> = (gInfo: GeniusInfo) => TE.tryCatch(
     () => GeniusModel.create({
         name: T.fromGeniusName(gInfo.geniusName),
