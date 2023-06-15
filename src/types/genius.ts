@@ -36,10 +36,10 @@ export const geniusOf = (geniusId: GeniusId) => (geniusName: GeniusName) => (gen
     ({geniusId, geniusName, geniusJoinDate})
 
 // Member status
-export type ToBeOnBoarder = { _tag: 'ToBeOnBoarder'}
+export type SayNoNo = { _tag: 'SayNoNo'}
 export type GeniusBar = { _tag: 'GeniusBar'}
-export type BootCamp = { _tag: 'BootCamp'}
-export type MemberStatus = ToBeOnBoarder | GeniusBar | BootCamp
+export type WorkFromHome = { _tag: 'WorkFromHome'}
+export type MemberStatus = SayNoNo | GeniusBar | WorkFromHome
 
 export interface MemberStateIssueDate extends Newtype<{ readonly MemberStateIssueDate: unique symbol }, string> {}
 const isoMemberStateIssueDate = iso<MemberStateIssueDate>()

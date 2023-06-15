@@ -1,4 +1,4 @@
-import mongoose, { Schema, model, Date } from 'mongoose'
+import mongoose, { Schema, model } from 'mongoose'
 
 const geniusSchema: Schema = new Schema(
     {
@@ -9,7 +9,8 @@ const geniusSchema: Schema = new Schema(
         joinDate: {
             type: Date,
             required: true
-        }
+        },
+        memberStatuses: [{ type: Schema.Types.ObjectId, ref: 'MemberStatus'}]
     },
     {
         timestamps: true,
@@ -19,4 +20,27 @@ const geniusSchema: Schema = new Schema(
     }
 )
 
+const memberStatusSchema = new Schema({
+    genius: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Genius'},
+    memberStatus: {
+        type: String,
+        enum: ['SayNoNo', 'GeniusBar', 'WorkFromHome'],
+        required: true
+    },
+    issueTime: {
+        type: Date,
+        required: true
+    }
+},
+    {
+        timestamps: true,
+        toJSON: {
+            versionKey: false
+        }
+    })
+
 export default mongoose.models.Genius || model('Genius', geniusSchema)
+export const MemberStatusModel = mongoose.models.MemberStatus || model('MemberStatus', memberStatusSchema)

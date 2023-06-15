@@ -21,6 +21,15 @@ const PostGeniusDtoCodec = t.type({
 export type PostGeniusDto = t.TypeOf<typeof PostGeniusDtoCodec>
 export const validatePostGeniusDto = PostGeniusDtoCodec.decode
 
+const PostMemberStatusDtoCodec = t.type({
+    genius_Id: t.string,
+    memberStatus: t.keyof({SayNoNo: null, GeniusBar: null, WorkFromHome: null}),
+    issueDate: DateFromString
+})
+
+export type PostMemberStatusDto = t.TypeOf<typeof PostMemberStatusDtoCodec>
+export const validatePostMemberStatusDto = PostMemberStatusDtoCodec.decode
+
 export type CreatedGeniusDto = {
     geniusId: string,
     geniusName: string,

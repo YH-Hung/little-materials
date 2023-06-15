@@ -1,11 +1,10 @@
 import * as TE from 'fp-ts/TaskEither'
-import * as E from 'fp-ts/Either'
 import * as O from 'fp-ts/Option'
-import GeniusModel from '../models/genius-model'
-import {PostGeniusDto} from "../types/genius-dto";
+import GeniusModel, {MemberStatusModel} from '../models/genius-model'
+import {PostGeniusDto, PostMemberStatusDto} from "../types/genius-dto";
 import * as T from '../types/genius'
+import {GeniusInfo, geniusJoinDateOf} from '../types/genius'
 import {pipe} from 'fp-ts/function'
-import {GeniusInfo, geniusJoinDateOf} from "../types/genius";
 
 interface GeniusDoc {
     _id: string,
@@ -14,7 +13,25 @@ interface GeniusDoc {
 }
 
 export const createGenius = (postDto: PostGeniusDto) => GeniusModel.create(postDto)
-export const getGeniuses = () => GeniusModel.find().exec()
+export const getGeniuses = () => GeniusModel.find()
+    .populate({
+        path: 'memberStatuses',
+        perDocumentLimit: 1,
+        options: { sort: {'createdAt': -1}}
+    })
+    .exec()
+
+export const createMemberStatusRecord = async (postDto: PostMemberStatusDto) => {
+    const theGenius = await GeniusModel.findById(postDto.genius_Id).exec()
+    const status = await MemberStatusModel.create({
+        genius: theGenius._id,
+        memberStatus: postDto.memberStatus,
+        issueTime: postDto.issueDate
+    });
+    theGenius.memberStatuses.push(status._id)
+    await theGenius.save()
+    return status
+}
 
 const safeCreateGenius: (gInfo: GeniusInfo) => TE.TaskEither<string, GeniusDoc> = (gInfo: GeniusInfo) => TE.tryCatch(
     () => GeniusModel.create({
