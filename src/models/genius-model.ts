@@ -10,7 +10,7 @@ const geniusSchema: Schema = new Schema(
             type: Date,
             required: true
         },
-        memberStatuses: [{ type: Schema.Types.ObjectId, ref: 'MemberStatus'}]
+        latestMemberStatus: { type: Schema.Types.ObjectId, ref: 'MemberStatus'}
     },
     {
         timestamps: true,

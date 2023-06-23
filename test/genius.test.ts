@@ -6,7 +6,7 @@ import request from "supertest";
 
 import startFastify from '../src/server'
 import GeniusModel from "../src/models/genius-model";
-import {PostGeniusDto} from "../src/types/genius-dto";
+import {PostGeniusDto, PostMemberStatusDto} from "../src/types/genius-dto";
 
 
 describe('Video API', () => {
@@ -66,6 +66,27 @@ describe('Video API', () => {
 
         const returnDate = new Date(returnGenius['joinDate'])
         expect(returnDate.getTime()).toBe(date.getTime())
+    })
+
+    it('POST /genius/memberStatus make memberStatus populated when GET /genius', async () => {
+        // Arrange
+        const geniusDto: PostGeniusDto = { name: 'WQ', joinDate:  new Date('2019-09-02')}
+        const geniusRes = await request(app.server).post(baseUrl).send(geniusDto)
+        const returnGenius = geniusRes.body
+
+        const memberStatusDto: PostMemberStatusDto = {
+            genius_Id: returnGenius.genius_Id,
+            memberStatus: 'SayNoNo',
+            issueDate: new Date(2020-11-12)
+        }
+
+        // Act
+        const memberStatusRes = await request(app.server).post(`${baseUrl}/memberStatus`).send(memberStatusDto)
+        const res = await request(app.server).get(baseUrl)
+
+        // Assert
+        const fetchBackGenius = res.body[0]
+        expect(fetchBackGenius['latestMemberStatus']['memberStatus']).toBe('SayNoNo')
     })
 
     afterEach(async () => {

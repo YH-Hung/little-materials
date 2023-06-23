@@ -28,7 +28,7 @@ export const createMemberStatusRecord = async (postDto: PostMemberStatusDto) => 
         memberStatus: postDto.memberStatus,
         issueTime: postDto.issueDate
     });
-    theGenius.memberStatuses.push(status._id)
+    theGenius.latestMemberStatus = status._id
     await theGenius.save()
     return status
 }
