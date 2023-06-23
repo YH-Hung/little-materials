@@ -20,27 +20,39 @@ const geniusSchema: Schema = new Schema(
     }
 )
 
-const memberStatusSchema = new Schema({
+const memberStatusOption = { discriminatorKey: 'kind', timestamps: true, toJSON: { versionKey: false } }
+const memberStatusBaseSchema = new Schema({
     genius: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'Genius'},
-    memberStatus: {
-        type: String,
-        enum: ['SayNoNo', 'GeniusBar', 'WorkFromHome'],
-        required: true
-    },
     issueTime: {
         type: Date,
         required: true
     }
-},
-    {
-        timestamps: true,
-        toJSON: {
-            versionKey: false
-        }
-    })
+}, memberStatusOption)
+
+export const MemberStatusBaseModel = mongoose.models.MemberStatus || model('MemberStatus', memberStatusBaseSchema)
+export const SayNoNoModel = MemberStatusBaseModel.discriminator('SayNoNo', new Schema({
+    toBeReject: {
+        type: String,
+        required: true
+    },
+    coolDownUntilDate: {
+        type: Date
+    }
+}, memberStatusOption))
+
+export const GeniusBarModel = MemberStatusBaseModel.discriminator('GeniusBar', new Schema({
+    resolvedIssues: {
+        type: Number,
+        required: true
+    }
+}, memberStatusOption))
+
+export const WorkFromHomeModel = MemberStatusBaseModel.discriminator('WorkFromHome', new Schema({
+    // empty
+}, memberStatusOption))
 
 export default mongoose.models.Genius || model('Genius', geniusSchema)
-export const MemberStatusModel = mongoose.models.MemberStatus || model('MemberStatus', memberStatusSchema)
+

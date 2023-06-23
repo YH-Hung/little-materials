@@ -21,17 +21,35 @@ const PostGeniusDtoCodec = t.type({
 export type PostGeniusDto = t.TypeOf<typeof PostGeniusDtoCodec>
 export const validatePostGeniusDto = PostGeniusDtoCodec.decode
 
-const PostMemberStatusDtoCodec = t.type({
+const PostMemberStatusBaseDtoCodec = t.type({
     genius_Id: t.string,
-    memberStatus: t.keyof({SayNoNo: null, GeniusBar: null, WorkFromHome: null}),
     issueDate: DateFromString
 })
 
-export type PostMemberStatusDto = t.TypeOf<typeof PostMemberStatusDtoCodec>
-export const validatePostMemberStatusDto = PostMemberStatusDtoCodec.decode
+const SayNoNoDtoCodec = t.intersection([
+    PostMemberStatusBaseDtoCodec,
+    t.type({
+        toBeReject: t.string
+    }),
+    t.partial({
+        coolDownUntilDate: DateFromString
+    })
+])
 
-export type CreatedGeniusDto = {
-    geniusId: string,
-    geniusName: string,
-    geniusJoinDate: Date
-}
+const GeniusBarDtoCodec = t.intersection([
+    PostMemberStatusBaseDtoCodec,
+    t.type({
+        resolvedIssues: t.number
+    })
+])
+
+const WorkFromHomeDtoCodec = PostMemberStatusBaseDtoCodec
+
+export type PostSayNoNoDto = t.TypeOf<typeof SayNoNoDtoCodec>
+export const validatePostSayNoNoDto = SayNoNoDtoCodec.decode
+
+export type PostGeniusBarDto = t.TypeOf<typeof GeniusBarDtoCodec>
+export const validPostGeniusBarDto = GeniusBarDtoCodec.decode
+
+export type PostWorkFromHomeDto = t.TypeOf<typeof WorkFromHomeDtoCodec>
+export const validatePostWorkFromHomeDto = WorkFromHomeDtoCodec.decode
