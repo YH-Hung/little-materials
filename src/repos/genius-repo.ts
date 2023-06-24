@@ -1,100 +1,60 @@
 import * as TE from 'fp-ts/TaskEither'
-import * as O from 'fp-ts/Option'
-import GeniusModel, {
-    GeniusBarModel,
-    MemberStatusBaseModel,
-    SayNoNoModel,
-    WorkFromHomeModel
-} from '../models/genius-model'
+import GeniusModel, {GeniusBarModel, SayNoNoModel, WorkFromHomeModel} from '../models/genius-model'
 import {PostGeniusBarDto, PostGeniusDto, PostSayNoNoDto, PostWorkFromHomeDto} from "../types/genius-dto";
-import * as T from '../types/genius'
-import {GeniusInfo, geniusJoinDateOf} from '../types/genius'
-import {pipe} from 'fp-ts/function'
-import {Schema} from "mongoose";
+import {flow, pipe} from 'fp-ts/function'
+import mongoose, {Error} from "mongoose";
+import {GeniusBarDoc, GeniusDoc, MemberStatusDoc, SayNoNoDoc} from "../types/genius-doc";
 
-interface GeniusDoc {
-    _id: Schema.Types.ObjectId,
-    name: string,
-    joinDate: Date
-}
+// TODO: Refine Typing
+export const createGenius: (postDto: PostGeniusDto) => TE.TaskEither<Error, GeniusDoc> =
+    (postDto) => TE.tryCatch(
+    () => GeniusModel.create(postDto),
+    (reason) => reason as Error
+)
 
-export const createGenius = (postDto: PostGeniusDto) => GeniusModel.create(postDto)
+// TODO: Typed query
 export const getGeniuses = () => GeniusModel.find()
     .populate('latestMemberStatus')
     .exec()
 
-export const issueSayNoNo = async (postDto: PostSayNoNoDto) => {
-    const theGenius = await GeniusModel.findById(postDto.genius_Id).exec()
-    const status = await SayNoNoModel.create({
-        genius: theGenius._id,
+const createSayNoNo: (postDto: PostSayNoNoDto) => TE.TaskEither<Error, SayNoNoDoc> =
+    (postDto) => TE.tryCatch(
+    () => SayNoNoModel.create({
+        genius: new mongoose.Types.ObjectId(postDto.genius_Id),
         issueTime: postDto.issueDate,
         toBeReject: postDto.toBeReject,
         ...(postDto.coolDownUntilDate && {coolDownUntilDate: postDto.coolDownUntilDate})
-    })
+    }),
+    (reason) => reason as Error
+)
 
-    theGenius.latestMemberStatus = status._id
-    await theGenius.save()
-    return status
-}
-
-export const issueGeniusBar = async (postDto: PostGeniusBarDto) => {
-    const theGenius = await GeniusModel.findById(postDto.genius_Id).exec()
-    const status = await GeniusBarModel.create({
-        genius: theGenius._id,
+const createGeniusBar: (postDto: PostGeniusBarDto) => TE.TaskEither<Error, GeniusBarDoc> = (postDto) => TE.tryCatch(
+    () => GeniusBarModel.create({
+        genius: new mongoose.Types.ObjectId(postDto.genius_Id),
         issueTime: postDto.issueDate,
         resolvedIssues: postDto.resolvedIssues
-    })
+    }),
+    (reason) => reason as Error
+)
 
-    theGenius.latestMemberStatus = status._id
-    await theGenius.save()
-    return status
-}
+const updateStatusIdBackToGenius: (status: MemberStatusDoc) => TE.TaskEither<Error, GeniusDoc> = (status) => pipe(
+    TE.tryCatch(
+        () => GeniusModel.findByIdAndUpdate(status.genius, {latestMemberStatus: status._id}, {new: true})
+            .populate('latestMemberStatus'),
+        (reason) => reason as Error
+    ),
+    TE.flatMap(TE.fromNullable(new Error('Genius Id Not found')))
+)
+
+export const issueSayNoNo = flow(createSayNoNo, TE.flatMap(updateStatusIdBackToGenius))
+
+export const issueGeniusBar = flow(createGeniusBar, TE.flatMap(updateStatusIdBackToGenius))
 
 export const issueWorkFromHome = async (postDto: PostWorkFromHomeDto) => {
-    const theGenius = await GeniusModel.findById(postDto.genius_Id).exec()
     const status = await WorkFromHomeModel.create({
-        genius: theGenius._id,
+        genius: new mongoose.Types.ObjectId(postDto.genius_Id),
         issueTime: postDto.issueDate
     })
 
-    theGenius.latestMemberStatus = status._id
-    await theGenius.save()
-    return status
+    return GeniusModel.findByIdAndUpdate(postDto.genius_Id, {latestMemberStatus: status._id}, {new: true})
 }
-
-const safeCreateGenius: (gInfo: GeniusInfo) => TE.TaskEither<string, GeniusDoc> = (gInfo: GeniusInfo) => TE.tryCatch(
-    () => GeniusModel.create({
-        name: T.fromGeniusName(gInfo.geniusName),
-        joinDate: T.fromGeniusJoinDate(gInfo.geniusJoinDate)
-    }),
-    (reason) => String(reason)
-)
-
-// export const addGenius = (dto: PostGeniusDto) =>
-//     pipe(dto,
-//         (dto) => ({
-//             name: T.geniusNameOf(dto.name),
-//             joinDate: dto.joinDate
-//         }),
-//         (dto) =>
-//             pipe(dto.name, O.match(
-//                 () => TE.left("Error Name"),
-//                 (name: T.GeniusName) => TE.right(T.geniusInfoOf(name)(geniusJoinDateOf(dto.joinDate)))
-//             )),
-//             TE.chain(safeCreateGenius),
-//             TE.chain((doc: GeniusDoc) =>
-//                 pipe(
-//                     O.some(T.geniusOf),
-//                     O.ap(T.geniusIdOf(doc._id.toString())),
-//                     O.ap(T.geniusNameOf(doc.name)),
-//                     O.ap(pipe(doc.joinDate, T.geniusJoinDateOf, O.some)),
-//                     TE.fromOption(() => "Wrong Doc")
-//                 )
-//             ),
-//             TE.map((g: T.Genius) => ({
-//                 geniusId: T.fromGeniusId(g.geniusId),
-//                 geniusName: T.fromGeniusName(g.geniusName),
-//                 geniusJoinDate: T.fromGeniusJoinDate(g.geniusJoinDate)
-//             }))
-//         )
-

@@ -1,6 +1,7 @@
 import mongoose, { Schema, model } from 'mongoose'
+import {GeniusBarDoc, GeniusDoc, MemberStatusDoc, SayNoNoDoc} from "../types/genius-doc";
 
-const geniusSchema: Schema = new Schema(
+const geniusSchema: Schema = new Schema<GeniusDoc>(
     {
         name: {
             type: String,
@@ -21,7 +22,7 @@ const geniusSchema: Schema = new Schema(
 )
 
 const memberStatusOption = { discriminatorKey: 'kind', timestamps: true, toJSON: { versionKey: false } }
-const memberStatusBaseSchema = new Schema({
+const memberStatusBaseSchema = new Schema<MemberStatusDoc>({
     genius: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -33,7 +34,7 @@ const memberStatusBaseSchema = new Schema({
 }, memberStatusOption)
 
 export const MemberStatusBaseModel = mongoose.models.MemberStatus || model('MemberStatus', memberStatusBaseSchema)
-export const SayNoNoModel = MemberStatusBaseModel.discriminator('SayNoNo', new Schema({
+export const SayNoNoModel = MemberStatusBaseModel.discriminator<SayNoNoDoc>('SayNoNo', new Schema({
     toBeReject: {
         type: String,
         required: true
@@ -43,14 +44,14 @@ export const SayNoNoModel = MemberStatusBaseModel.discriminator('SayNoNo', new S
     }
 }, memberStatusOption))
 
-export const GeniusBarModel = MemberStatusBaseModel.discriminator('GeniusBar', new Schema({
+export const GeniusBarModel = MemberStatusBaseModel.discriminator<GeniusBarDoc>('GeniusBar', new Schema({
     resolvedIssues: {
         type: Number,
         required: true
     }
 }, memberStatusOption))
 
-export const WorkFromHomeModel = MemberStatusBaseModel.discriminator('WorkFromHome', new Schema({
+export const WorkFromHomeModel = MemberStatusBaseModel.discriminator<MemberStatusDoc>('WorkFromHome', new Schema({
     // empty
 }, memberStatusOption))
 
