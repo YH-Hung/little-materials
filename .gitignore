@@ -123,8 +123,8 @@ dist
 .vscode-test
 
 # Webstorm
-.idea
-
+.idea/
+*.http
 # yarn v2
 .yarn/cache
 .yarn/unplugged

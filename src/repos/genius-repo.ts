@@ -3,7 +3,7 @@ import GeniusModel, {GeniusBarModel, SayNoNoModel, WorkFromHomeModel} from '../m
 import {PostGeniusBarDto, PostGeniusDto, PostSayNoNoDto, PostWorkFromHomeDto} from "../types/genius-dto";
 import {flow, pipe} from 'fp-ts/function'
 import mongoose, {Error} from "mongoose";
-import {GeniusBarDoc, GeniusDoc, MemberStatusDoc, SayNoNoDoc} from "../types/genius-doc";
+import {GeniusBarDoc, GeniusDoc, MemberStatusDoc, SayNoNoDoc, WorkFromHomeDoc} from "../types/genius-doc";
 
 // TODO: Refine Typing
 export const createGenius: (postDto: PostGeniusDto) => TE.TaskEither<Error, GeniusDoc> =
@@ -37,6 +37,15 @@ const createGeniusBar: (postDto: PostGeniusBarDto) => TE.TaskEither<Error, Geniu
     (reason) => reason as Error
 )
 
+const createWorkFromHome: (postDto: PostWorkFromHomeDto) => TE.TaskEither<Error, WorkFromHomeDoc> = (postDto) => TE.tryCatch(
+    () => WorkFromHomeModel.create({
+        genius: new mongoose.Types.ObjectId(postDto.genius_Id),
+        issueTime: postDto.issueDate
+    }),
+    (reason) => reason as Error
+)
+
+
 const updateStatusIdBackToGenius: (status: MemberStatusDoc) => TE.TaskEither<Error, GeniusDoc> = (status) => pipe(
     TE.tryCatch(
         () => GeniusModel.findByIdAndUpdate(status.genius, {latestMemberStatus: status._id}, {new: true})
@@ -50,11 +59,4 @@ export const issueSayNoNo = flow(createSayNoNo, TE.flatMap(updateStatusIdBackToG
 
 export const issueGeniusBar = flow(createGeniusBar, TE.flatMap(updateStatusIdBackToGenius))
 
-export const issueWorkFromHome = async (postDto: PostWorkFromHomeDto) => {
-    const status = await WorkFromHomeModel.create({
-        genius: new mongoose.Types.ObjectId(postDto.genius_Id),
-        issueTime: postDto.issueDate
-    })
-
-    return GeniusModel.findByIdAndUpdate(postDto.genius_Id, {latestMemberStatus: status._id}, {new: true})
-}
+export const issueWorkFromHome = flow(createWorkFromHome, TE.flatMap(updateStatusIdBackToGenius))

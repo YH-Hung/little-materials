@@ -18,3 +18,5 @@
 
 ## MongoDB
 docker run -d -p 27017:27017 mongo:6.0.6
+brew services start mongodb-community@6.0
+brew services stop mongodb-community@6.0

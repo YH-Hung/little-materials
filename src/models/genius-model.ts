@@ -1,5 +1,5 @@
 import mongoose, { Schema, model } from 'mongoose'
-import {GeniusBarDoc, GeniusDoc, MemberStatusDoc, SayNoNoDoc} from "../types/genius-doc";
+import {GeniusBarDoc, GeniusDoc, MemberStatusDoc, SayNoNoDoc, WorkFromHomeDoc} from "../types/genius-doc";
 
 const geniusSchema: Schema = new Schema<GeniusDoc>(
     {
@@ -51,7 +51,7 @@ export const GeniusBarModel = MemberStatusBaseModel.discriminator<GeniusBarDoc>(
     }
 }, memberStatusOption))
 
-export const WorkFromHomeModel = MemberStatusBaseModel.discriminator<MemberStatusDoc>('WorkFromHome', new Schema({
+export const WorkFromHomeModel = MemberStatusBaseModel.discriminator<WorkFromHomeDoc>('WorkFromHome', new Schema({
     // empty
 }, memberStatusOption))
 

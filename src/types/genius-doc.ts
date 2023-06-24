@@ -21,3 +21,5 @@ export interface SayNoNoDoc extends MemberStatusDoc {
 export interface GeniusBarDoc extends MemberStatusDoc {
     resolvedIssues: number
 }
+
+export interface WorkFromHomeDoc extends MemberStatusDoc {}
