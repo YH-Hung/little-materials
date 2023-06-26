@@ -1,6 +1,5 @@
 import mongoose, { Schema, model } from 'mongoose'
 import {GeniusBarDoc, GeniusDoc, MemberStatusDoc, SayNoNoDoc, WorkFromHomeDoc} from "../types/genius-doc";
-import {SayNoNo} from "../types/genius";
 
 const geniusSchema: Schema = new Schema<GeniusDoc>(
     {

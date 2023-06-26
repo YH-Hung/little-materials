@@ -25,7 +25,6 @@
     "@types/supertest": "^2.0.12",
     "@vitest/coverage-c8": "^0.31.2",
     "concurrently": "^8.0.1",
-    "newtype-ts": "^0.3.5",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.8",
     "supertest": "^6.3.3",
