@@ -45,7 +45,6 @@ const createWorkFromHome: (postDto: PostWorkFromHomeDto) => TE.TaskEither<Error,
     (reason) => reason as Error
 )
 
-
 const updateStatusIdBackToGenius: (status: MemberStatusDoc) => TE.TaskEither<Error, GeniusDoc> = (status) => pipe(
     TE.tryCatch(
         () => GeniusModel.findByIdAndUpdate(status.genius, {latestMemberStatus: status._id}, {new: true})
