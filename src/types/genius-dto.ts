@@ -62,3 +62,23 @@ export type PostWorkFromHomeDto = t.TypeOf<typeof WorkFromHomeDtoCodec>
 
 export type PostMemberStatusDto = t.TypeOf<typeof PostMemberStatusDtoCodec>
 export const validatePostMemberStatusDto = PostMemberStatusDtoCodec.decode
+
+const PostAssignedTaskDtoCodec = t.type({
+    statusId: t.string,
+    issueDate: DateFromString,
+    taskName: t.string
+})
+
+export type PostAssignedTaskDto = t.TypeOf<typeof PostAssignedTaskDtoCodec>
+export const validatePostAssignedTaskDto = PostAssignedTaskDtoCodec.decode
+
+const PatchTaskReleaseDtoCodec = t.intersection([
+    t.type({
+        assignedTaskId: t.string,
+        releaseAt: DateFromString
+    }),
+    t.partial({ reason: t.string })
+])
+
+export type PatchTaskReleaseDto = t.TypeOf<typeof PatchTaskReleaseDtoCodec>
+export const validatePatchTaskRelease = PatchTaskReleaseDtoCodec.decode

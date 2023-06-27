@@ -6,11 +6,11 @@ import request from "supertest";
 
 import startFastify from '../src/server'
 import GeniusModel from "../src/models/genius-model";
-import {PostGeniusDto, PostSayNoNoDto} from "../src/types/genius-dto";
+import {PostAssignedTaskDto, PostGeniusDto, PostSayNoNoDto, PostWorkFromHomeDto} from "../src/types/genius-dto";
 import {inspect} from "util";
 
 
-describe('Video API', () => {
+describe('Genius API', () => {
     let app: FastifyInstance
 
     beforeAll(async () => {
@@ -84,12 +84,43 @@ describe('Video API', () => {
         }
 
         // Act
-        const memberStatusRes = await request(app.server).post(`${baseUrl}/memberStatus`).send(memberStatusDto)
+        await request(app.server).post(`${baseUrl}/memberStatus`).send(memberStatusDto)
         const res = await request(app.server).get(baseUrl)
 
         // Assert
         const fetchBackGenius = res.body[0]
         expect(fetchBackGenius['latestMemberStatus']['kind']).toBe('SayNoNo')
+    })
+
+    it('POST /genius/memberStatus/task make assigned tasks populated when GET /genius', async () => {
+        // Arrange
+        const geniusDto: PostGeniusDto = { name: 'WQ', joinDate:  new Date('2019-09-02')}
+        const geniusRes = await request(app.server).post(baseUrl).send(geniusDto)
+        const returnGenius = geniusRes.body
+
+        const memberStatusDto: PostWorkFromHomeDto = {
+            genius_Id: returnGenius['_id'],
+            kind: 'WorkFromHome',
+            issueDate: new Date('2020-11-12')
+        }
+
+        const memberStatusRes = await request(app.server).post(`${baseUrl}/memberStatus`).send(memberStatusDto)
+
+        console.log(inspect(memberStatusRes))
+        const taskDto: PostAssignedTaskDto = {
+            statusId: memberStatusRes.body['latestMemberStatus']['_id'],
+            taskName: 'Wind Vally',
+            issueDate: new Date('2021-12-22')
+        }
+
+        // Act
+        await request(app.server).post(`${baseUrl}/memberStatus/task`).send(taskDto)
+        const res = await request(app.server).get(baseUrl)
+
+        // Assert
+        const fetchBackGenius = res.body[0]
+        expect(fetchBackGenius['latestMemberStatus']['kind']).toBe('WorkFromHome')
+        expect(fetchBackGenius['latestMemberStatus']['assignedTasks']).toHaveLength(1)
     })
 
     afterEach(async () => {

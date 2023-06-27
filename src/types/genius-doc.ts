@@ -22,4 +22,19 @@ export interface GeniusBarDoc extends MemberStatusDoc {
     resolvedIssues: number
 }
 
-export interface WorkFromHomeDoc extends MemberStatusDoc {}
+export interface WorkFromHomeDoc extends MemberStatusDoc {
+    assignedTasks: mongoose.Types.ObjectId[]
+}
+
+export interface AssignedTaskDoc {
+    _id: mongoose.Types.ObjectId
+    memberStatus: mongoose.Types.ObjectId
+    issueTime: Date
+    taskName: string
+    release?: TaskRelease,
+}
+
+export interface TaskRelease {
+    releaseAt: Date
+    reason?: string
+}
