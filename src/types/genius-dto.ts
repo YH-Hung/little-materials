@@ -64,7 +64,7 @@ export type PostMemberStatusDto = t.TypeOf<typeof PostMemberStatusDtoCodec>
 export const validatePostMemberStatusDto = PostMemberStatusDtoCodec.decode
 
 const PostAssignedTaskDtoCodec = t.type({
-    statusId: t.string,
+    geniusId: t.string,
     issueDate: DateFromString,
     taskName: t.string
 })
@@ -74,7 +74,8 @@ export const validatePostAssignedTaskDto = PostAssignedTaskDtoCodec.decode
 
 const PatchTaskReleaseDtoCodec = t.intersection([
     t.type({
-        assignedTaskId: t.string,
+        geniusId: t.string,
+        taskName: t.string,
         releaseAt: DateFromString
     }),
     t.partial({ reason: t.string })

@@ -40,11 +40,7 @@ export const GeniusRoute = (server: FastifyInstance, opts: RouteShorthandOptions
     server.post<{Body: PostMemberStatusDto}>('/genius/memberStatus', (req, rpl) =>
         pipe(
             req.body,
-            (body) => TSP.match(body)
-                .with({kind: 'SayNoNo'}, GeniusRepo.issueSayNoNo)
-                .with({kind: 'GeniusBar'}, GeniusRepo.issueGeniusBar)
-                .with({kind: 'WorkFromHome'}, GeniusRepo.issueWorkFromHome)
-                .exhaustive(),
+            GeniusRepo.issueMemberStatus,
             TE.match(
                 (err) => postErrorMapping(err, req, rpl),
                 (genius) => rpl.status(200).send(genius)
@@ -52,16 +48,16 @@ export const GeniusRoute = (server: FastifyInstance, opts: RouteShorthandOptions
         )()
     )
 
-    server.post<{Body: PostAssignedTaskDto}>('/genius/memberStatus/task', (req, rpl) => {
-        pipe(
-            req.body,
-            GeniusRepo.issueAssignedTask,
-            TE.match(
-                (err) => postErrorMapping(err, req, rpl),
-                (genius) => rpl.status(201).send(genius)
-            )
-        )()
-    })
+    // server.post<{Body: PostAssignedTaskDto}>('/genius/memberStatus/task', (req, rpl) => {
+    //     pipe(
+    //         req.body,
+    //         GeniusRepo.issueAssignedTask,
+    //         TE.match(
+    //             (err) => postErrorMapping(err, req, rpl),
+    //             (genius) => rpl.status(201).send(genius)
+    //         )
+    //     )()
+    // })
 
     done()
 }

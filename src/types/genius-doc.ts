@@ -4,12 +4,11 @@ export interface GeniusDoc {
     _id: mongoose.Types.ObjectId,
     name: string,
     joinDate: Date,
-    latestMemberStatus: mongoose.Types.ObjectId
+    memberStatuses: MemberStatusDoc[]
 }
 
 export interface MemberStatusDoc {
-    _id: mongoose.Types.ObjectId,
-    genius: mongoose.Types.ObjectId,
+    kind: string
     issueTime: Date
 }
 
@@ -23,18 +22,16 @@ export interface GeniusBarDoc extends MemberStatusDoc {
 }
 
 export interface WorkFromHomeDoc extends MemberStatusDoc {
-    assignedTasks: mongoose.Types.ObjectId[]
+    assignedTasks: AssignedTaskDoc[]
 }
 
 export interface AssignedTaskDoc {
-    _id: mongoose.Types.ObjectId
-    memberStatus: mongoose.Types.ObjectId
     issueTime: Date
     taskName: string
-    release?: TaskRelease,
+    release?: TaskReleaseDoc,
 }
 
-export interface TaskRelease {
+export interface TaskReleaseDoc {
     releaseAt: Date
     reason?: string
 }
