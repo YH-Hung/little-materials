@@ -134,11 +134,10 @@ describe('Genius API', () => {
         }
 
         // Act
-        await request(app.server).post(`${baseUrl}/memberStatus/task`).send(taskDto)
-        const res = await request(app.server).get(baseUrl)
+        const res = await request(app.server).post(`${baseUrl}/memberStatus/task`).send(taskDto)
 
         // Assert
-        const fetchBackGenius = res.body[0]
+        const fetchBackGenius = res.body
         expect(fetchBackGenius['memberStatuses'][0]['kind']).toBe('WorkFromHome')
         expect(fetchBackGenius['assignedTasks']).toHaveLength(1)
     })
@@ -171,11 +170,10 @@ describe('Genius API', () => {
 
         // Act
         await request(app.server).post(`${baseUrl}/memberStatus/task`).send(taskDto)
-        await request(app.server).put(`${baseUrl}/memberStatus/task`).send(releaseDto)
-        const res = await request(app.server).get(baseUrl)
+        const res = await request(app.server).put(`${baseUrl}/memberStatus/task`).send(releaseDto)
 
         // Assert
-        const fetchBackGenius = res.body[0]
+        const fetchBackGenius = res.body
         expect(fetchBackGenius['assignedTasks'][0]['release']).not.toBeUndefined()
 
     })

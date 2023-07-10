@@ -9,6 +9,7 @@ import {
 import * as TE from 'fp-ts/TaskEither'
 import {pipe} from 'fp-ts/function'
 import * as TSP from 'ts-pattern'
+import {convertToViews} from "../services/genius-service";
 
 const postErrorMapping = (err: Error, req: FastifyRequest, rpl: FastifyReply) => TSP.match(err)
     .with(TSP.P.instanceOf(Error.ValidationError), (ev) => rpl.status(400).send(ev))
@@ -21,7 +22,7 @@ export const GeniusRoute = (server: FastifyInstance, opts: RouteShorthandOptions
     // TODO: Use TaskEither
     server.get('/genius', async (req, rpl) => {
         const geniuses = await GeniusRepo.getGeniuses()
-        return rpl.status(200).send(geniuses)
+        return rpl.status(200).send(convertToViews(geniuses))
     })
 
     // TODO: io-ts validation

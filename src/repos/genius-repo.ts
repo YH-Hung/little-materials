@@ -51,7 +51,7 @@ const checkGeniusExisted = flow(
     TE.flatMap(TE.fromOption(() => new Error('genius id not found'))),
 )
 
-const aggregateCurrentStatus = (gDoc: GeniusDoc) => pipe(
+export const aggregateCurrentStatus = (gDoc: GeniusDoc) => pipe(
     gDoc.memberStatuses,
     (ms) => A.reduce(ms[0], (pre, cur: MemberStatusDoc) =>
         cur.issueTime.getTime() > pre.issueTime.getTime() ? cur : pre)(ms),
