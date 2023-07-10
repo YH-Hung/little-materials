@@ -5,9 +5,11 @@ export interface GeniusDoc {
     name: string,
     joinDate: Date,
     memberStatuses: MemberStatusDoc[]
+    assignedTasks: AssignedTaskDoc[]
 }
 
 export interface MemberStatusDoc {
+    _id: mongoose.Types.ObjectId
     kind: string
     issueTime: Date
 }
@@ -22,7 +24,6 @@ export interface GeniusBarDoc extends MemberStatusDoc {
 }
 
 export interface WorkFromHomeDoc extends MemberStatusDoc {
-    assignedTasks: AssignedTaskDoc[]
 }
 
 export interface AssignedTaskDoc {
@@ -35,3 +36,5 @@ export interface TaskReleaseDoc {
     releaseAt: Date
     reason?: string
 }
+
+export type StatusKind = 'SayNoNo' | 'GeniusBar' | 'WorkFromHome'

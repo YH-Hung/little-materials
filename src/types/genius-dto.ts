@@ -72,7 +72,7 @@ const PostAssignedTaskDtoCodec = t.type({
 export type PostAssignedTaskDto = t.TypeOf<typeof PostAssignedTaskDtoCodec>
 export const validatePostAssignedTaskDto = PostAssignedTaskDtoCodec.decode
 
-const PatchTaskReleaseDtoCodec = t.intersection([
+const PutTaskReleaseDtoCodec = t.intersection([
     t.type({
         geniusId: t.string,
         taskName: t.string,
@@ -81,5 +81,5 @@ const PatchTaskReleaseDtoCodec = t.intersection([
     t.partial({ reason: t.string })
 ])
 
-export type PatchTaskReleaseDto = t.TypeOf<typeof PatchTaskReleaseDtoCodec>
-export const validatePatchTaskRelease = PatchTaskReleaseDtoCodec.decode
+export type PutTaskReleaseDto = t.TypeOf<typeof PutTaskReleaseDtoCodec>
+export const validatePutTaskRelease = PutTaskReleaseDtoCodec.decode

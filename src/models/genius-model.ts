@@ -14,10 +14,25 @@ const memberStatusBaseSchema = new Schema<MemberStatusDoc>({
     issueTime: { type: Date, required: true }
 }, memberStatusOption)
 
+const releaseSchema = new Schema<TaskReleaseDoc>({
+    releaseAt: { type: Date, required: true },
+    reason: { type: String }
+})
+
+const assignedTaskSchema = new Schema<AssignedTaskDoc>({
+    taskName: { type: String, required: true },
+    issueTime: { type: Date, required: true },
+    release: {
+        type: releaseSchema,
+        required: false
+    }
+})
+
 const geniusSchema: Schema = new Schema<GeniusDoc>({
     name: { type: String, required: true },
     joinDate: { type: Date, required: true },
     memberStatuses: [memberStatusBaseSchema],
+    assignedTasks: [assignedTaskSchema]
 })
 
 // For SubDocument discriminator, some mongoose typescript issues here,
@@ -33,22 +48,8 @@ memberStatusPath.discriminator<GeniusBarDoc>('GeniusBar', new Schema({
     resolvedIssues: { type: Number, required: true }
 }, memberStatusOption))
 
-const releaseSchema = new Schema<TaskReleaseDoc>({
-    releaseAt: { type: Date, required: true },
-    reason: { type: String }
-})
-
-const assignedTaskSchema = new Schema<AssignedTaskDoc>({
-    taskName: { type: String, required: true },
-    issueTime: { type: Date, required: true },
-    release: {
-        type: releaseSchema,
-        required: false
-    }
-})
 
 memberStatusPath.discriminator<WorkFromHomeDoc>('WorkFromHome', new Schema({
-    assignedTasks: [assignedTaskSchema]
 }, memberStatusOption))
 
 

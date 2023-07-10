@@ -4,7 +4,7 @@ import * as GeniusRepo from "../repos/genius-repo";
 import {
     PostAssignedTaskDto,
     PostGeniusDto,
-    PostMemberStatusDto,
+    PostMemberStatusDto, PutTaskReleaseDto,
 } from "../types/genius-dto";
 import * as TE from 'fp-ts/TaskEither'
 import {pipe} from 'fp-ts/function'
@@ -48,16 +48,27 @@ export const GeniusRoute = (server: FastifyInstance, opts: RouteShorthandOptions
         )()
     )
 
-    // server.post<{Body: PostAssignedTaskDto}>('/genius/memberStatus/task', (req, rpl) => {
-    //     pipe(
-    //         req.body,
-    //         GeniusRepo.issueAssignedTask,
-    //         TE.match(
-    //             (err) => postErrorMapping(err, req, rpl),
-    //             (genius) => rpl.status(201).send(genius)
-    //         )
-    //     )()
-    // })
+    server.post<{Body: PostAssignedTaskDto}>('/genius/memberStatus/task', (req, rpl) => {
+        pipe(
+            req.body,
+            GeniusRepo.issueAssignedTask,
+            TE.match(
+                (err) => postErrorMapping(err, req, rpl),
+                (genius) => rpl.status(201).send(genius)
+            )
+        )()
+    })
+
+    server.put<{Body: PutTaskReleaseDto}>('/genius/memberStatus/task', (req, rpl) => {
+        pipe(
+            req.body,
+            GeniusRepo.releaseAssignTask,
+            TE.match(
+                (err) => postErrorMapping(err, req, rpl),
+                (genius) => rpl.status(200).send(genius)
+            )
+        )()
+    })
 
     done()
 }
