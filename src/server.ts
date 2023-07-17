@@ -3,6 +3,8 @@ import { establishConnection } from './plugins/mongoose'
 import { SearchTag } from './types/search-tag'
 import { VideoRoute } from './routes/video-route'
 import {GeniusRoute} from "./routes/genius-route";
+import fastifyStatic from "@fastify/static";
+import path from "path";
 
 const app: FastifyInstance = fastify({
   logger: {
@@ -18,6 +20,11 @@ export default function startFastify(config: AppConfig): FastifyInstance {
     port: config.port,
     host: config.host
   }
+
+  app.register(fastifyStatic, {
+    root: path.join(__dirname, '../docusaurus/build'),
+    prefix: '/'
+  })
 
   app.get('/hc', async (request, reply) => reply.status(200).send({ msg: 'healthy' }))
   app.get('/tags', async (req, rpl) => {

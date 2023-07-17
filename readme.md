@@ -20,3 +20,8 @@
 docker run -d -p 27017:27017 mongo:6.0.6
 brew services start mongodb-community@6.0
 brew services stop mongodb-community@6.0
+
+## Docusaurus
+under the docusaurus/website path
+- npx create-docusaurus@latest little-doc classic --typescript
+- npm install -D typescript @docusaurus/module-type-aliases @tsconfig/docusaurus

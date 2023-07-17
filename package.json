@@ -12,6 +12,7 @@
   "author": "YHH",
   "license": "ISC",
   "dependencies": {
+    "@fastify/static": "^6.10.2",
     "dotenv": "^16.0.3",
     "fastify": "^4.17.0",
     "fp-ts": "^2.16.0",
@@ -21,6 +22,8 @@
     "ts-pattern": "^5.0.1"
   },
   "devDependencies": {
+    "@docusaurus/module-type-aliases": "^2.4.1",
+    "@tsconfig/docusaurus": "^2.0.0",
     "@types/node": "^20.2.5",
     "@types/supertest": "^2.0.12",
     "@vitest/coverage-c8": "^0.31.2",
@@ -29,7 +32,7 @@
     "prettier": "^2.8.8",
     "supertest": "^6.3.3",
     "testcontainers-mongoose": "^2.0.2",
-    "typescript": "^5.0.4",
+    "typescript": "^5.1.6",
     "vitest": "^0.31.1"
   }
 }
